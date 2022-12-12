@@ -3,6 +3,7 @@ const db = require("../db/data/development-data");
 const request = require("supertest");
 const seed = require("../db/seeds/seed");
 const testData = require("../db/data/test-data")
+const sorting = require('jest-sorted');
 
 beforeEach(()=>{
 
@@ -15,7 +16,17 @@ afterAll(() => {
     if (db.end) db.end();
   });
 
-
+describe('Testing for bad path', () => {
+    test('should return 404 error', () => {
+        return request(app)
+        .get('/non-path')
+        .expect(404)
+        .then(({body: {msg}})=>{
+expect(msg).toBe('path not found')
+        })
+    });
+    
+});
 
   describe('Get/api/categories', () => {
     test('Status 200 - should respond with an array of category objects', () => {
@@ -24,8 +35,10 @@ afterAll(() => {
         .expect(200)
         .then(({body})=>{
             const { categories } = body;
-            expect(categories).toBeInstanceOf(Array);
-            console.log(categories);
+            expect(categories).toBeInstanceOf(Array)
+            expect(categories[0]).toBeInstanceOf(Object);
+            expect.objectContaining({ slug: 'euro game', description: 'Abstact games that involve little luck' }),
+            expect(categories.length).toBe(4)
 
         })
     });
@@ -36,10 +49,40 @@ afterAll(() => {
         return request(app)
         .get("/api/reviews")
         .expect(200)
-        .then(({})=>{
-
-
+        .then(({body})=>{
+            const { reviews } = body;
+            expect(reviews.length).toBe(13)
+            expect(reviews).toBeInstanceOf(Array)
+            expect(reviews[0]).toBeInstanceOf(Object);
+            reviews.forEach((review)=>{
+                expect(review).toEqual(
+                    expect.objectContaining({
+                        review_id: expect.any(Number),
+                        title: expect.any(String),
+    category: expect.any(String),
+    designer: expect.any(String),
+    owner: expect.any(String),
+    review_body: expect.any(String),
+    review_img_url: expect.any(String),
+    created_at: expect.any(String),
+    votes: expect.any(Number),
+    comment_count: expect.any(String)
+                    })
+                )
+            })
         })
         
     });
+    test('should sort date by date in descending order', () => {
+        return request(app)
+        .get("/api/reviews")
+        .then(({body})=>{
+            const { reviews } = body;
+expect(reviews).toBeSortedBy('created_at',  {
+    descending: true,
+  })
+
+        })
+    });
   });
+  
