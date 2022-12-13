@@ -38,9 +38,19 @@ exports.selectCommentsByReviewId = (review_id) =>{
 
     return db
     .query("SELECT * FROM comments WHERE review_id = $1;", [review_id])
-    .then(({rows}) => {   
+    .then(({rows}) => { 
+
+        if(!rows.length){
+            return Promise.reject({
+                status: 404,
+                msg: 'No comments with that review id'
     
-    const review = rows[0] 
+            })
+        }  
+        console.log(rows, "rows")
+        return rows
    
-   return review});
+  
+   
+   });
 }

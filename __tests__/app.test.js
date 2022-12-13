@@ -124,7 +124,7 @@ expect(msg).toBe('No review with that id')
         .get("/api/reviews/chocolate")
         .expect(400)
         .then((({body:{msg}})=>{
-            expect(msg).toBe('Invalid input')
+            expect(msg).toBe('Bad Request')
             
                 }))
     });
@@ -144,7 +144,7 @@ describe('GET /api/reviews/:review_id/comments', () => {
     votes: 16,
     author: 'bainesface',
     review_id: 2,
-    created_at: new Date(1511354613389),
+    created_at: expect.any(String),
   },
   {
     comment_id: 4,
@@ -152,7 +152,7 @@ describe('GET /api/reviews/:review_id/comments', () => {
     votes: 16,
     author: 'bainesface',
     review_id: 2,
-    created_at: new Date(1511354163389),
+    created_at: expect.any(String),
   },
   {
     comment_id: 5,
@@ -160,14 +160,31 @@ describe('GET /api/reviews/:review_id/comments', () => {
     votes: 13,
     author: 'mallionaire',
     review_id: 2,
-    created_at: new Date(1610965445410),
+    created_at: expect.any(String),
   },
  
 ])
           )
-
         })
         
     });
+    test('should return a 404 error when given an id that doesnt exist', () => {
+        return request(app)
+        .get("/api/reviews/523/comments")
+        .expect(404)
+        .then((({body:{msg}})=>{
+    expect(msg).toBe('No comments with that review id')
     
-});
+        }))
+        })
+        test('should return 400 when given invalid review Id', () => {
+            return request(app)
+        .get("/api/reviews/banana/comments")
+        .expect(400)
+        .then((({body:{msg}})=>{
+    expect(msg).toBe('Bad Request')
+    
+        }))
+        });
+
+    })

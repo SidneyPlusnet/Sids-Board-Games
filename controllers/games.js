@@ -14,7 +14,6 @@ exports.getReviews = (request,response, next) =>{
     }).catch(next)
     
     }
-    
     exports.getReviewId = (request, response, next) =>{
         const { review_id } = request.params;
         selectReviewId(review_id).then((review)=>{
