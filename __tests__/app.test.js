@@ -13,7 +13,8 @@ return seed(testData)
 
 
 afterAll(() => {
-    if (db.end) db.end();
+    if (db.end){ 
+       return db.end()};
   });
 
 describe('Testing for bad path', () => {
@@ -28,7 +29,7 @@ expect(msg).toBe('path not found')
     
 });
 
-  describe('Get/api/categories', () => {
+  describe('Get /api/categories', () => {
     test('Status 200 - should respond with an array of category objects', () => {
         return request(app)
         .get("/api/categories")
@@ -44,7 +45,7 @@ expect(msg).toBe('path not found')
     });
 
   });
-  describe('Get/api/reviews', () => {
+  describe('Get /api/reviews', () => {
     test('Status 200 - Should respond with an array of review objects ', () => {
         return request(app)
         .get("/api/reviews")
@@ -52,21 +53,19 @@ expect(msg).toBe('path not found')
         .then(({body})=>{
             const { reviews } = body;
             expect(reviews.length).toBe(13)
-            expect(reviews).toBeInstanceOf(Array)
             expect(reviews[0]).toBeInstanceOf(Object);
             reviews.forEach((review)=>{
                 expect(review).toEqual(
                     expect.objectContaining({
                         review_id: expect.any(Number),
                         title: expect.any(String),
-    category: expect.any(String),
-    designer: expect.any(String),
-    owner: expect.any(String),
-    review_body: expect.any(String),
-    review_img_url: expect.any(String),
-    created_at: expect.any(String),
-    votes: expect.any(Number),
-    comment_count: expect.any(String)
+                        category: expect.any(String),
+                        designer: expect.any(String),
+                        owner: expect.any(String),
+                        review_img_url: expect.any(String),
+                        created_at: expect.any(String),
+                        votes: expect.any(Number),
+                        comment_count: expect.any(String)
                     })
                 )
             })
@@ -85,4 +84,42 @@ expect(reviews).toBeSortedBy('created_at',  {
         })
     });
   });
-  
+  describe('Get /api/reviews/:review_id', () => {
+
+    test('should return a review object when given an id', () => {
+        
+    
+    return request(app)
+    .get("/api/reviews/2")
+    .expect(200)
+    .then(({body})=>{
+        // console.log(body, "body.Response")
+        // console.log({body} , "{body}")
+        const { review } = body;
+        
+        expect(review).toEqual(
+            expect.objectContaining({
+                review_id: 2,
+                title: 'Jenga',
+                category: 'dexterity',
+                designer: 'Leslie Scott',
+                owner: 'philippaclaire9',
+                review_body: 'Fiddly fun for all the family',
+                review_img_url:  'https://www.golenbock.com/wp-content/uploads/2015/01/placeholder-user.png',
+                created_at: expect.any(String),
+                votes: 5
+            })
+        )
+    })
+});
+test('should return a 400 error when given an id that doesnt exist', () => {
+    
+    return request(app)
+    .get("/api/reviews/4326")
+    .expect(400)
+    .then((({body:{msg}})=>{
+expect(msg).toBe('Bad Request')
+
+    }))
+    })
+});
