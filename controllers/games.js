@@ -1,10 +1,23 @@
-const {selectCategories} = require("../models/games")
+const { request, response } = require("../app")
+const reviews = require("../db/data/development-data/reviews")
+const {selectCategories, selectReviews, selectReviewId} = require("../models/games")
 
 exports.getCategories = (request, response, next) => {
-    console.log("I'm in the controller")
 selectCategories().then((categories)=>{
 response.status(200).send({categories})
 }).catch(next)
 }
-
-// catch here
+exports.getReviews = (request,response, next) =>{
+    selectReviews().then((reviews)=>{
+    response.status(200).send({reviews})
+    
+    }).catch(next)
+    
+    }
+    
+    exports.getReviewId = (request, response, next) =>{
+        const { review_id } = request.params;
+        selectReviewId(review_id).then((review)=>{
+            response.status(200).send({review})
+        }).catch(next)
+    }
