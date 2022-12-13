@@ -33,3 +33,14 @@ return db
     }
    return review});
 }
+
+exports.selectCommentsByReviewId = (review_id) =>{
+
+    return db
+    .query("SELECT * FROM comments WHERE review_id = $1;", [review_id])
+    .then(({rows}) => {   
+    
+    const review = rows[0] 
+   
+   return review});
+}
