@@ -132,59 +132,12 @@ expect(msg).toBe('No review with that id')
 describe('GET /api/reviews/:review_id/comments', () => {
     test('should return an array of comments for a particular review', () => {
         return request(app)
-        .get("/api/reviews/2/comments")
+        .post("/api/reviews/2/comments")
         .expect(200)
         .then(({body})=>{
           const {comments} = body
-          expect(comments).toEqual(
-            expect.objectContaining([
-  {
-    comment_id: 1,
-    body: 'I loved this game too!',
-    votes: 16,
-    author: 'bainesface',
-    review_id: 2,
-    created_at: expect.any(String),
-  },
-  {
-    comment_id: 4,
-    body: 'EPIC board game!',
-    votes: 16,
-    author: 'bainesface',
-    review_id: 2,
-    created_at: expect.any(String),
-  },
-  {
-    comment_id: 5,
-    body: 'Now this is a story all about how, board games turned my life upside down',
-    votes: 13,
-    author: 'mallionaire',
-    review_id: 2,
-    created_at: expect.any(String),
-  },
- 
-])
-          )
-        })
         
-    });
-    test('should return a 404 error when given an id that doesnt exist', () => {
-        return request(app)
-        .get("/api/reviews/523/comments")
-        .expect(404)
-        .then((({body:{msg}})=>{
-    expect(msg).toBe('No comments with that review id')
-    
-        }))
         })
-        test('should return 400 when given invalid review Id', () => {
-            return request(app)
-        .get("/api/reviews/banana/comments")
-        .expect(400)
-        .then((({body:{msg}})=>{
-    expect(msg).toBe('Bad Request')
-    
-        }))
-        });
+    });
+});
 
-    })
