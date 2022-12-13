@@ -124,7 +124,7 @@ expect(msg).toBe('No review with that id')
         .get("/api/reviews/chocolate")
         .expect(400)
         .then((({body:{msg}})=>{
-            expect(msg).toBe('Invalid input')
+            expect(msg).toBe('Bad Request')
             
                 }))
     });
