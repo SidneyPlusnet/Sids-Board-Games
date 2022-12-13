@@ -26,7 +26,9 @@ return db
     const review = rows[0] 
     if(!review){
         return Promise.reject({
-            status: 404
+            status: 404,
+            msg: 'No review with that id'
+
         })
     }
    return review});

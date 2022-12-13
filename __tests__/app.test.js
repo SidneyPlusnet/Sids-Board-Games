@@ -93,10 +93,7 @@ expect(reviews).toBeSortedBy('created_at',  {
     .get("/api/reviews/2")
     .expect(200)
     .then(({body})=>{
-        // console.log(body, "body.Response")
-        // console.log({body} , "{body}")
         const { review } = body;
-        
         expect(review).toEqual(
             expect.objectContaining({
                 review_id: 2,
@@ -112,14 +109,23 @@ expect(reviews).toBeSortedBy('created_at',  {
         )
     })
 });
-test('should return a 400 error when given an id that doesnt exist', () => {
+test('should return a 404 error when given an id that doesnt exist', () => {
     
     return request(app)
     .get("/api/reviews/4326")
-    .expect(400)
+    .expect(404)
     .then((({body:{msg}})=>{
-expect(msg).toBe('Bad Request')
+expect(msg).toBe('No review with that id')
 
     }))
     })
+    test('should return 400 when given an invalidId', () => {
+        return request(app)
+        .get("/api/reviews/chocolate")
+        .expect(400)
+        .then((({body:{msg}})=>{
+            expect(msg).toBe('Invalid input')
+            
+                }))
+    });
 });
