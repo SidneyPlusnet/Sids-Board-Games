@@ -135,36 +135,33 @@ describe('GET /api/reviews/:review_id/comments', () => {
         .get("/api/reviews/2/comments")
         .expect(200)
         .then(({body})=>{
-          const {comments} = body
-          expect(comments).toEqual(
-            expect.objectContaining([
-  {
-    comment_id: 1,
-    body: 'I loved this game too!',
-    votes: 16,
-    author: 'bainesface',
-    review_id: 2,
-    created_at: expect.any(String),
-  },
-  {
-    comment_id: 4,
-    body: 'EPIC board game!',
-    votes: 16,
-    author: 'bainesface',
-    review_id: 2,
-    created_at: expect.any(String),
-  },
-  {
-    comment_id: 5,
-    body: 'Now this is a story all about how, board games turned my life upside down',
-    votes: 13,
-    author: 'mallionaire',
-    review_id: 2,
-    created_at: expect.any(String),
-  },
- 
-])
-          )
+            const {comments} = body
+      
+            comments.forEach((comment)=>{
+                expect(comment).toEqual(
+                    expect.objectContaining({
+                        comment_id: expect.any(Number),
+                        votes: expect.any(Number),
+                        created_at : expect.any(String),
+                        author: expect.any(String),
+                        body: expect.any(String),
+                        review_id : expect.any(Number),
+                    })
+                )
+            })
+        })
+    })
+
+    test('should return the comments with the most recent comments first', () => {
+
+        return request(app)
+        .get("/api/reviews/2/comments")
+        .then(({body})=>{
+            const { comments } = body;
+expect(comments).toBeSortedBy('created_at',  {
+    descending: true,
+  })
+
         })
         
     });
