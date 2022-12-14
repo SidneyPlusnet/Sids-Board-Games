@@ -93,7 +93,7 @@ expect(reviews).toBeSortedBy('created_at',  {
     .get("/api/reviews/2")
     .expect(200)
     .then(({body})=>{
-        const { review } = body;
+const {review} = body
         expect(review).toEqual(
             expect.objectContaining({
                 review_id: 2,
@@ -109,26 +109,18 @@ expect(reviews).toBeSortedBy('created_at',  {
         )
     })
 });
-test('should return a 404 error when given an id that doesnt exist', () => {
-    
+test('should return 400 when given an invalidId', () => {
     return request(app)
-    .get("/api/reviews/4326")
-    .expect(404)
+    .get("/api/reviews/chocolate")
+    .expect(400)
     .then((({body:{msg}})=>{
-expect(msg).toBe('No review with that id')
-
-    }))
-    })
-    test('should return 400 when given an invalidId', () => {
-        return request(app)
-        .get("/api/reviews/chocolate")
-        .expect(400)
-        .then((({body:{msg}})=>{
-            expect(msg).toBe('Bad Request')
-            
-                }))
-    });
+        expect(msg).toBe('Bad Request')
+        
+            }))
 });
+    })
+    
+
 describe('GET /api/reviews/:review_id/comments', () => {
     test('should return an array of comments for a particular review', () => {
         return request(app)
