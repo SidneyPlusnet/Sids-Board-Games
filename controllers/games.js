@@ -29,6 +29,7 @@ exports.getReviews = (request,response, next) =>{
     }
 
     exports.postComment = (request, response, next) => {
+        console.log("controller")
 const comment = request.body
 insertComment(comment).then((comment)=>{
 response.status(201).send({comment})
