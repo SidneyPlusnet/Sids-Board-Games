@@ -45,13 +45,13 @@ exports.selectCommentsByReviewId = (review_id) =>{
    });
 }
 
-exports.insertComment = (comment) => {
+exports.insertComment = (comment ,review_id) => {
     console.log("model")
 return db
-.query(`INSERT INTO comments (username, body) VALUES ($1, $2) RETURNING *;`, [comment.username, comment.body])
+.query(`INSERT INTO comments (author, body, votes, created_at, review_id) VALUES ($1, $2, $3, $4, $5) RETURNING *;`, [comment.username, comment.body, 0, "14/12/2022", review_id])
 .then(({rows: comment})=>{
 
 return comment[0]
 })
-
+// need to find a way to include review ID, which i think should be request. params
 }

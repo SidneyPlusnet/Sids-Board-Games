@@ -191,9 +191,12 @@ expect(comments).toBeSortedBy('created_at',  {
             .then(({body})=>{
             const {comment} = body
             expect(comment).toEqual({
-                username: "Charles",
-                body: 'this is a new comment'
-              })
+                body: 'this is a new comment',
+                votes: 16,
+                author: "Charles",
+                review_id: 2,
+                created_at: "14/12/2022"
+              },)
           
             })
     
