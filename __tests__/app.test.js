@@ -177,3 +177,25 @@ expect(comments).toBeSortedBy('created_at',  {
         });
 
     })
+
+    describe('7. POST /api/reviews/:review_id/comments', () => {
+        test('should respond with a comment with username and body added ', () => {
+            const newComment = {
+                username: "Charles",
+                body: 'this is a new comment'
+              }
+            return request(app)
+            .post("/api/reviews/2/comments")
+            .send(newComment)
+            .expect(201)
+            .then(({body})=>{
+            const {comment} = body
+            expect(comment).toEqual({
+                username: "Charles",
+                body: 'this is a new comment'
+              })
+          
+            })
+    
+        });
+    });

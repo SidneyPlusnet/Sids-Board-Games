@@ -44,3 +44,13 @@ exports.selectCommentsByReviewId = (review_id) =>{
         return rows
    });
 }
+
+exports.insertComment = (comment) => {
+return db
+.query(`INSERT INTO comments (username, body) VALUES ($1, $2) RETURNING *;`, [comment.username, comment.body])
+.then(({rows: comment})=>{
+
+return comment[0]
+})
+
+}

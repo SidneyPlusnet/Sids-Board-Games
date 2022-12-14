@@ -1,6 +1,6 @@
 const { request, response } = require("../app")
 const reviews = require("../db/data/development-data/reviews")
-const {selectCategories, selectReviews, selectReviewId, selectCommentsByReviewId} = require("../models/games")
+const {selectCategories, selectReviews, selectReviewId, selectCommentsByReviewId, insertComment} = require("../models/games")
 
 exports.getCategories = (request, response, next) => {
 selectCategories().then((categories)=>{
@@ -27,3 +27,11 @@ exports.getReviews = (request,response, next) =>{
             response.status(200).send({comments})
         }).catch(next)
     }
+
+    exports.postComment = (request, response, next) => {
+const comment = request.body
+insertComment(comment).then((comment)=>{
+response.status(201).send({comment})
+})
+}
+    
