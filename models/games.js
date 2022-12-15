@@ -23,3 +23,19 @@ return db
     const review = rows[0] 
     if(!review){
         return Promise.reject({
+            status: 404,
+            msg: 'No review with that id'
+
+        })
+    }
+   return review});
+}
+
+exports.selectCommentsByReviewId = (review_id) =>{
+    return db
+    .query("SELECT * FROM comments WHERE review_id = $1 ORDER BY created_at DESC;", [review_id])
+    .then(({rows}) => {
+
+        return rows
+   });
+}

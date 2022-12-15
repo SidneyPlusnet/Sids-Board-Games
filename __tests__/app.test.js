@@ -93,7 +93,7 @@ expect(reviews).toBeSortedBy('created_at',  {
     .get("/api/reviews/2")
     .expect(200)
     .then(({body})=>{
-
+const {review} = body
         expect(review).toEqual(
             expect.objectContaining({
                 review_id: 2,
@@ -109,4 +109,81 @@ expect(reviews).toBeSortedBy('created_at',  {
         )
     })
 });
+test('should return 400 when given an invalidId', () => {
+    return request(app)
+    .get("/api/reviews/chocolate")
+    .expect(400)
+    .then((({body:{msg}})=>{
+        expect(msg).toBe('Bad Request')
+        
+            }))
+});
+    })
+    
 
+describe('GET /api/reviews/:review_id/comments', () => {
+    test('should return an array of comments for a particular review', () => {
+        return request(app)
+        .get("/api/reviews/2/comments")
+        .expect(200)
+        .then(({body})=>{
+            const {comments} = body
+      
+            comments.forEach((comment)=>{
+                expect(comment).toEqual(
+                    expect.objectContaining({
+                        comment_id: expect.any(Number),
+                        votes: expect.any(Number),
+                        created_at : expect.any(String),
+                        author: expect.any(String),
+                        body: expect.any(String),
+                        review_id : expect.any(Number),
+                    })
+                )
+            })
+        })
+    })
+
+    test('should return status 200 when given valid id but no comment', () => {
+        return request(app)
+        .get("/api/reviews/4/comments")
+        .expect(200)
+        .then(({body})=>{
+            const { comments } = body;
+            expect(comments).toEqual([]) 
+        })
+    });
+
+    test('should return the comments with the most recent comments first', () => {
+
+        return request(app)
+        .get("/api/reviews/2/comments")
+        .then(({body})=>{
+            const { comments } = body;
+expect(comments).toBeSortedBy('created_at',  {
+    descending: true,
+  })
+
+        })
+        
+    });
+    test('should return a 404 error when given an id that doesnt exist', () => {
+        return request(app)
+        .get("/api/reviews/523/comments")
+        .expect(404)
+        .then((({body:{msg}})=>{
+    expect(msg).toBe('No review with that id')
+    
+        }))
+        })
+        test('should return 400 when given invalid review Id', () => {
+            return request(app)
+        .get("/api/reviews/banana/comments")
+        .expect(400)
+        .then((({body:{msg}})=>{
+    expect(msg).toBe('Bad Request')
+    
+        }))
+        });
+
+    })
