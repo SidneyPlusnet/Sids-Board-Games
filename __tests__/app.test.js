@@ -247,7 +247,7 @@ expect(comments).toBeSortedBy('created_at',  {
 
                     
         });
-        test('should respond with a 404 when given a bad review that doesnt exist', () => {
+        test('should respond with a 404 when given a review that doesnt exist', () => {
             
             const invalidUsername = {
                 username: "bainesface",
@@ -286,9 +286,9 @@ expect(comments).toBeSortedBy('created_at',  {
             body: 'this is bad request'
           }
         return request(app)
-        .post("/api/reviews/banaa/comments")
+        .post("/api/reviews/2/comments")
         .send(invalidUsername)
-        .expect(400)
+        .expect(404)
         .then((({body:{msg}})=>{
             expect(msg).toBe('Bad Request')
             
@@ -335,14 +335,37 @@ expect(comments).toBeSortedBy('created_at',  {
                         }))
             });
 
+            test('should respond with a 400 when given an invalid review id', () => {
+                const body = {inc_votes: 6 }
+                return request(app)
+                .patch("/api/reviews/banana")
+                .send(body)
+                .expect(400)
+                .then((({body:{msg}})=>{
+                    expect(msg).toBe('Bad Request')
+                        }))
+            });
+
             test('should return 404 when given review id that doesnt exist', () => {
-                const badBody = {inc_votes: 6 }
+                const body = {inc_votes: 6 }
                 return request(app)
                 .patch("/api/reviews/515")
-                .send(badBody)
+                .send(body)
                 .expect(404)
                 .then((({body:{msg}})=>{
                     expect(msg).toBe("No review with that id")
                         }))
             });
+
+            test('should return 400 when given an invalid type in number of votes', () => {
+                const body = {inc_votes: "chutney" }
+                return request(app)
+                .patch("/api/reviews/2")
+                .send(body)
+                .expect(400)
+                .then((({body:{msg}})=>{
+                    expect(msg).toBe("Bad Request")
+                        }))
+            });
+          
         });
