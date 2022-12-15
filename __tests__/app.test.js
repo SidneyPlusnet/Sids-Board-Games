@@ -247,7 +247,7 @@ expect(comments).toBeSortedBy('created_at',  {
 
                     
         });
-        test('should respond with a 404 when given a bad review id', () => {
+        test('should respond with a 404 when given a bad review that doesnt exist', () => {
             
             const invalidUsername = {
                 username: "bainesface",
@@ -262,7 +262,40 @@ expect(comments).toBeSortedBy('created_at',  {
                 
                     }))
         });
+
+   
+    test('should respond with a 400 when given a bad review id', () => {
+        
+        const invalidUsername = {
+            username: "bainesface",
+            body: 'this is bad request'
+          }
+        return request(app)
+        .post("/api/reviews/banaa/comments")
+        .send(invalidUsername)
+        .expect(400)
+        .then((({body:{msg}})=>{
+            expect(msg).toBe('Bad Request')
+            
+                }))
+    });
+    test('should respond with a 404 when given a user that doesnt exist', () => {
+        
+        const invalidUsername = {
+            username: "michelle",
+            body: 'this is bad request'
+          }
+        return request(app)
+        .post("/api/reviews/banaa/comments")
+        .send(invalidUsername)
+        .expect(400)
+        .then((({body:{msg}})=>{
+            expect(msg).toBe('Bad Request')
+            
+                }))
+    });
+   
             
         });
-    
+
 

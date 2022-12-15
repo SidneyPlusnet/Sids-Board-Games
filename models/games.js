@@ -57,5 +57,5 @@ return db
  
 return comment[0]
 })
-// need to find a way to include review ID, which i think should be request. params
 }
+

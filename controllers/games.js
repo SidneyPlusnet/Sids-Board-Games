@@ -1,6 +1,6 @@
 const { request, response } = require("../app")
 const reviews = require("../db/data/development-data/reviews")
-const {selectCategories, selectReviews, selectReviewId, selectCommentsByReviewId, insertComment} = require("../models/games")
+const {selectCategories, selectReviews, selectReviewId, selectCommentsByReviewId, insertComment, updateReview} = require("../models/games")
 
 exports.getCategories = (request, response, next) => {
 selectCategories().then((categories)=>{
@@ -40,5 +40,4 @@ response.status(201).send({comment})
 
 }).catch(next)
 }
-    
-  
+
