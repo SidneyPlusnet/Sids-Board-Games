@@ -202,4 +202,18 @@ expect(comments).toBeSortedBy('created_at',  {
             })
         
         });
+        test.only('should return status 400 when given a bad request', () => {
+            const newComment = {
+                timePiece: "bainesface",
+                nigel: 'this is bad request'
+              }
+            return request(app)
+            .post("/api/reviews/2/comments")
+            .send(newComment)
+            .expect(400)
+            .then((({body:{msg}})=>{
+                expect(msg).toBe('Bad Request')
+                
+                    }))
+        });
     });

@@ -34,6 +34,6 @@ exports.getReviews = (request,response, next) =>{
 const comment = request.body
 insertComment(comment, review_id).then((comment)=>{
 response.status(201).send({comment})
-})
+}).catch(next)
 }
     

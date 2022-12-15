@@ -47,11 +47,12 @@ exports.selectCommentsByReviewId = (review_id) =>{
 
 exports.insertComment = (comment ,review_id) => {
     console.log("model")
-    console.log(review_id, "review id")
-    console.log(comment, "comment")
+
 return db
 .query(`INSERT INTO comments (author, body, votes, review_id) VALUES ($1, $2, $3, $4) RETURNING *;`, [comment.username, comment.body, 0, review_id])
 .then(({rows: comment})=>{
+    console.log(rows, "rows")
+    console.log(comment, "comment")
 
 return comment[0]
 })
