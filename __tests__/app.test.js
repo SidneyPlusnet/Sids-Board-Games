@@ -302,10 +302,11 @@ expect(comments).toBeSortedBy('created_at',  {
 describe('GET /api/users', () => {
     test.only('should  respond with an array of user objects', () => {
         return request(app)
-        .get("api/users")
+        .get("/api/users")
         .expect(200)
-        .then(({rows})=>{
-const {users} = rows
+        .then(({body})=>{
+            console.log(body, "body")
+const {users} = body
 expect(users.length).toBe(4);
             expect(users[0]).toBeInstanceOf(Object);
             users.forEach((user) => {

@@ -62,7 +62,7 @@ return comment[0]
 exports.selectUsers =() =>{
     console.log("models")
 return db
-.query(`SELECT * FROM users`).then(({rows:users})=>{
+.query(`SELECT * FROM users;`).then(({rows:users})=>{
 
 return users
 

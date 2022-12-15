@@ -10,7 +10,7 @@ app.get("/api/reviews", getReviews)
 app.get("/api/reviews/:review_id", getReviewId)
 app.get("/api/reviews/:review_id/comments", getCommentsByReviewId)
 app.post("/api/reviews/:review_id/comments", postComment)
-app.get("api/users", getUsers)
+app.get("/api/users", getUsers)
 
 app.use((err, req, res, next) => {
   console.log(err, "normal error")
