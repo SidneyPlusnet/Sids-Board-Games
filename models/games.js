@@ -60,8 +60,7 @@ return db
 .query(`INSERT INTO comments (author, body, votes, review_id) VALUES ($1, $2, $3, $4) RETURNING *;`, [comment.username, comment.body, 0, review_id])
 .then(({rows: comment})=>{
 
-    
- 
+
 return comment[0]
 })
 // need to find a way to include review ID, which i think should be request. params

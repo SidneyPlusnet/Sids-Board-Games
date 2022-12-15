@@ -144,6 +144,17 @@ describe('GET /api/reviews/:review_id/comments', () => {
         })
     })
 
+    test('should return status 200 when given valid id but no comment', () => {
+        return request(app)
+        .get("/api/reviews/4/comments")
+        .expect(200)
+        .then(({body})=>{
+            const { comments } = body;
+            expect(comments).toEqual([]) 
+        })
+    });
+
+
     test('should return the comments with the most recent comments first', () => {
 
         return request(app)

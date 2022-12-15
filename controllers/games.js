@@ -20,13 +20,15 @@ exports.getReviews = (request,response, next) =>{
             response.status(200).send({review})
         }).catch(next)
     }
-
     exports.getCommentsByReviewId = (request, response, next) => {
         const { review_id } = request.params;
-        selectCommentsByReviewId(review_id).then((comments)=>{
+        selectReviewId(review_id).then(()=>{
+            selectCommentsByReviewId(review_id).then((comments)=>{
             response.status(200).send({comments})
+        })
         }).catch(next)
     }
+
 
     exports.postComment = (request, response, next) => {
         console.log("controller")
@@ -37,3 +39,4 @@ response.status(201).send({comment})
 }).catch(next)
 }
     
+  
