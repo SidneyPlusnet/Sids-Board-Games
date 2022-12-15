@@ -31,11 +31,13 @@ exports.getReviews = (request,response, next) =>{
 
 
     exports.postComment = (request, response, next) => {
-        console.log("controller")
         const { review_id } = request.params;
 const comment = request.body
+
+
 insertComment(comment, review_id).then((comment)=>{
 response.status(201).send({comment})
+
 }).catch(next)
 }
     

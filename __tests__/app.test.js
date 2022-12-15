@@ -173,7 +173,7 @@ expect(comments).toBeSortedBy('created_at',  {
         .get("/api/reviews/523/comments")
         .expect(404)
         .then((({body:{msg}})=>{
-    expect(msg).toBe('No comments with that review id')
+    expect(msg).toBe("No review with that id")
     
         }))
         })
@@ -213,15 +213,12 @@ expect(comments).toBeSortedBy('created_at',  {
             })
         
         });
-        test('should return status 400 when given a bad body or a bad username', () => {
+        test('should return status 400 when given a bad body', () => {
             const invalidBody = {
                 username: "bainesface",
                 nigel: 'this is bad request'
               }
-              const invalid = {
-                username: "bainesface",
-                nigel: 'this is bad request'
-              }
+              
             return request(app)
             .post("/api/reviews/2/comments")
             .send(invalidBody)
@@ -233,4 +230,39 @@ expect(comments).toBeSortedBy('created_at',  {
 
                     
         });
-    });
+        test('should return status 400 when given a bad username', () => {
+          
+              const invalidUsername = {
+                manyThings: "bainesface",
+                body: 'this is bad request'
+              }
+            return request(app)
+            .post("/api/reviews/2/comments")
+            .send(invalidUsername)
+            .expect(400)
+            .then((({body:{msg}})=>{
+                expect(msg).toBe('Bad Request')
+                
+                    }))
+
+                    
+        });
+        test('should respond with a 404 when given a bad review id', () => {
+            
+            const invalidUsername = {
+                username: "bainesface",
+                body: 'this is bad request'
+              }
+            return request(app)
+            .post("/api/reviews/2632/comments")
+            .send(invalidUsername)
+            .expect(404)
+            .then((({body:{msg}})=>{
+                expect(msg).toBe('Bad Request')
+                
+                    }))
+        });
+            
+        });
+    
+

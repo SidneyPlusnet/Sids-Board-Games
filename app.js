@@ -25,10 +25,13 @@ app.use((err, req, res, next) => {
   } else next(err);
 });
 
+
 app.use((err, req, res, next) => {
-  console.log(err, "err im 500")
-    res.status(500).send({ msg: 'Internal Server Error' });
-  });
+  if ( err.code === "23503") {
+    res.status(404).send({ msg: 'Bad Request' });
+  } else next(err);
+});
+
 
   app.all('*', (req, res, next)=>{
 res.status(404).send({msg: 'path not found'})

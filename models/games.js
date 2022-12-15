@@ -35,12 +35,7 @@ exports.selectCommentsByReviewId = (review_id) =>{
     return db
     .query("SELECT * FROM comments WHERE review_id = $1 ORDER BY created_at DESC;", [review_id])
     .then(({rows}) => {
-        if(!rows.length){
-            return Promise.reject({
-                status: 404,
-                msg: 'No comments with that review id'
-            })
-        }  
+   
         return rows
    });
 }
@@ -53,14 +48,13 @@ if(comment.username === undefined || comment.body === undefined ){
         msg: 'Bad Request'
     })
 }
-    console.log(comment.username, "comment.username")
-    console.log(comment.body, "comment.body")
 
 return db
 .query(`INSERT INTO comments (author, body, votes, review_id) VALUES ($1, $2, $3, $4) RETURNING *;`, [comment.username, comment.body, 0, review_id])
 .then(({rows: comment})=>{
 
-
+    
+ 
 return comment[0]
 })
 // need to find a way to include review ID, which i think should be request. params
