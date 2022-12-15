@@ -148,6 +148,10 @@ describe('GET /api/reviews/:review_id/comments', () => {
         return request(app)
         .get("/api/reviews/4/comments")
         .expect(200)
+        .then(({body})=>{
+            const { comments } = body;
+            expect(comments).toEqual([]) 
+        })
     });
 
     test('should return the comments with the most recent comments first', () => {
