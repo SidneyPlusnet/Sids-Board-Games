@@ -144,6 +144,12 @@ describe('GET /api/reviews/:review_id/comments', () => {
         })
     })
 
+    test('should return status 200 when given valid id but no comment', () => {
+        return request(app)
+        .get("/api/reviews/4/comments")
+        .expect(200)
+    });
+
     test('should return the comments with the most recent comments first', () => {
 
         return request(app)
@@ -162,7 +168,7 @@ expect(comments).toBeSortedBy('created_at',  {
         .get("/api/reviews/523/comments")
         .expect(404)
         .then((({body:{msg}})=>{
-    expect(msg).toBe('No comments with that review id')
+    expect(msg).toBe('No review with that id')
     
         }))
         })
