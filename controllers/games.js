@@ -23,7 +23,6 @@ exports.getReviews = (request,response, next) =>{
 
     exports.getCommentsByReviewId = (request, response, next) => {
         const { review_id } = request.params;
-
         selectReviewId(review_id).then(()=>{
             selectCommentsByReviewId(review_id).then((comments)=>{
             response.status(200).send({comments})

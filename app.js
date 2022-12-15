@@ -10,7 +10,7 @@ app.get("/api/reviews/:review_id", getReviewId)
 app.get("/api/reviews/:review_id/comments", getCommentsByReviewId)
 
 app.use((err, req, res, next) => {
-  console.log(err, "error")
+ 
   if (err.status && err.msg) {
     res.status(err.status).send({ msg: err.msg });
   }else 

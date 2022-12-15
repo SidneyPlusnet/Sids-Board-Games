@@ -36,15 +36,6 @@ exports.selectCommentsByReviewId = (review_id) =>{
     .query("SELECT * FROM comments WHERE review_id = $1 ORDER BY created_at DESC;", [review_id])
     .then(({rows}) => {
 
- 
-
-  //      console.log(rows, "rows")
-        // if(!rows.length){
-        //     return Promise.reject({
-        //         status: 404,
-        //         msg: 'No comments with that review id'
-        //     })
-        // }  
         return rows
    });
 }
