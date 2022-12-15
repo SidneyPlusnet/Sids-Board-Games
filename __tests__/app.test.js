@@ -299,3 +299,50 @@ expect(comments).toBeSortedBy('created_at',  {
         });
 
 
+        describe('8. PATCH /api/reviews/:review_id', () => {
+            test('should respond with an updated review that includes new vote count', () => {
+                const reviewUpdates = {inc_votes: 6 }
+                return request(app)
+                .patch("/api/reviews/2")
+                .send(reviewUpdates)
+                .expect(200)
+                .then(({body})=>{
+                    const {review} = body
+                    expect(review).toEqual(
+                        expect.objectContaining({
+                            review_id: 2,
+                            title: 'Jenga',
+                            category: 'dexterity',
+                            designer: 'Leslie Scott',
+                            owner: 'philippaclaire9',
+                            review_body: 'Fiddly fun for all the family',
+                            review_img_url:  'https://www.golenbock.com/wp-content/uploads/2015/01/placeholder-user.png',
+                            created_at: expect.any(String),
+                            votes: 11
+                        })
+                    )
+                })
+                
+            });
+            test('should return 400 when given a invalid body', () => {
+                const badBody = {bad_votes: 6 }
+                return request(app)
+                .patch("/api/reviews/2")
+                .send(badBody)
+                .expect(400)
+                .then((({body:{msg}})=>{
+                    expect(msg).toBe('Bad Request')
+                        }))
+            });
+
+            test('should return 404 when given review id that doesnt exist', () => {
+                const badBody = {inc_votes: 6 }
+                return request(app)
+                .patch("/api/reviews/515")
+                .send(badBody)
+                .expect(404)
+                .then((({body:{msg}})=>{
+                    expect(msg).toBe("No review with that id")
+                        }))
+            });
+        });

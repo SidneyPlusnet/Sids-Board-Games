@@ -20,6 +20,7 @@ exports.getReviews = (request,response, next) =>{
             response.status(200).send({review})
         }).catch(next)
     }
+    
     exports.getCommentsByReviewId = (request, response, next) => {
         const { review_id } = request.params;
         selectReviewId(review_id).then(()=>{
@@ -33,11 +34,27 @@ exports.getReviews = (request,response, next) =>{
     exports.postComment = (request, response, next) => {
         const { review_id } = request.params;
 const comment = request.body
-
-
 insertComment(comment, review_id).then((comment)=>{
 response.status(201).send({comment})
 
 }).catch(next)
 }
 
+exports.patchReview = (request, response, next) =>{
+    console.log("controller")
+    const { review_id } = request.params;
+    const review = request.body
+
+    selectReviewId(review_id).then(()=>{
+    return updateReview(review, review_id)
+    }).then((review)=>{
+console.log(review,"review in controller")
+    response.status(200).send({review})
+    
+    }).catch(next)
+}
+
+// //.then((review)=>{
+//     console.log(review,"review in controller")
+//     response.status(200).send({review})
+//         })
