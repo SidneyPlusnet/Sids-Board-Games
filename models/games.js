@@ -35,7 +35,27 @@ exports.selectCommentsByReviewId = (review_id) =>{
     return db
     .query("SELECT * FROM comments WHERE review_id = $1 ORDER BY created_at DESC;", [review_id])
     .then(({rows}) => {
-
+   
         return rows
    });
 }
+
+exports.insertComment = (comment ,review_id) => {
+
+if(comment.username === undefined || comment.body === undefined ){
+    return Promise.reject({
+        status: 400,
+        msg: 'Bad Request'
+    })
+}
+
+return db
+.query(`INSERT INTO comments (author, body, votes, review_id) VALUES ($1, $2, $3, $4) RETURNING *;`, [comment.username, comment.body, 0, review_id])
+.then(({rows: comment})=>{
+
+    
+ 
+return comment[0]
+})
+}
+

@@ -154,6 +154,7 @@ describe('GET /api/reviews/:review_id/comments', () => {
         })
     });
 
+
     test('should return the comments with the most recent comments first', () => {
 
         return request(app)
@@ -172,7 +173,7 @@ expect(comments).toBeSortedBy('created_at',  {
         .get("/api/reviews/523/comments")
         .expect(404)
         .then((({body:{msg}})=>{
-    expect(msg).toBe('No review with that id')
+    expect(msg).toBe("No review with that id")
     
         }))
         })
@@ -187,3 +188,114 @@ expect(comments).toBeSortedBy('created_at',  {
         });
 
     })
+
+    describe('7. POST /api/reviews/:review_id/comments', () => {
+        test('should respond with a comment with username and body added ', () => {
+            const newComment = {
+                username: "bainesface",
+                body: 'this is a new comment'
+              }
+            return request(app)
+            .post("/api/reviews/2/comments")
+            .send(newComment)
+            .expect(201)
+            .then(({body})=>{
+            const {comment} = body
+            expect(comment).toEqual(
+                expect.objectContaining({
+                body: 'this is a new comment',
+                votes: 0,
+                author: "bainesface",
+                review_id: 2,
+                created_at: expect.any(String),
+              })
+            )
+            })
+        
+        });
+        test('should return status 400 when given a bad body', () => {
+            const invalidBody = {
+                username: "bainesface",
+                nigel: 'this is bad request'
+              }
+              
+            return request(app)
+            .post("/api/reviews/2/comments")
+            .send(invalidBody)
+            .expect(400)
+            .then((({body:{msg}})=>{
+                expect(msg).toBe('Bad Request')
+                
+                    }))
+
+                    
+        });
+        test('should return status 400 when given a bad username', () => {
+          
+              const invalidUsername = {
+                manyThings: "bainesface",
+                body: 'this is bad request'
+              }
+            return request(app)
+            .post("/api/reviews/2/comments")
+            .send(invalidUsername)
+            .expect(400)
+            .then((({body:{msg}})=>{
+                expect(msg).toBe('Bad Request')
+                
+                    }))
+
+                    
+        });
+        test('should respond with a 404 when given a bad review that doesnt exist', () => {
+            
+            const invalidUsername = {
+                username: "bainesface",
+                body: 'this is bad request'
+              }
+            return request(app)
+            .post("/api/reviews/2632/comments")
+            .send(invalidUsername)
+            .expect(404)
+            .then((({body:{msg}})=>{
+                expect(msg).toBe('Bad Request')
+                
+                    }))
+        });
+
+   
+    test('should respond with a 400 when given a bad review id', () => {
+        
+        const invalidUsername = {
+            username: "bainesface",
+            body: 'this is bad request'
+          }
+        return request(app)
+        .post("/api/reviews/banaa/comments")
+        .send(invalidUsername)
+        .expect(400)
+        .then((({body:{msg}})=>{
+            expect(msg).toBe('Bad Request')
+            
+                }))
+    });
+    test('should respond with a 404 when given a user that doesnt exist', () => {
+        
+        const invalidUsername = {
+            username: "michelle",
+            body: 'this is bad request'
+          }
+        return request(app)
+        .post("/api/reviews/banaa/comments")
+        .send(invalidUsername)
+        .expect(400)
+        .then((({body:{msg}})=>{
+            expect(msg).toBe('Bad Request')
+            
+                }))
+    });
+   
+            
+        });
+
+
