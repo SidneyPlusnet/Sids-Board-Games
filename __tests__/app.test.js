@@ -202,18 +202,24 @@ expect(comments).toBeSortedBy('created_at',  {
             })
         
         });
-        test.only('should return status 400 when given a bad request', () => {
-            const newComment = {
-                timePiece: "bainesface",
+        test('should return status 400 when given a bad body or a bad username', () => {
+            const invalidBody = {
+                username: "bainesface",
+                nigel: 'this is bad request'
+              }
+              const invalid = {
+                username: "bainesface",
                 nigel: 'this is bad request'
               }
             return request(app)
             .post("/api/reviews/2/comments")
-            .send(newComment)
+            .send(invalidBody)
             .expect(400)
             .then((({body:{msg}})=>{
                 expect(msg).toBe('Bad Request')
                 
                     }))
+
+                    
         });
     });
