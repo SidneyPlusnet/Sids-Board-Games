@@ -181,7 +181,7 @@ expect(comments).toBeSortedBy('created_at',  {
     describe('7. POST /api/reviews/:review_id/comments', () => {
         test('should respond with a comment with username and body added ', () => {
             const newComment = {
-                username: "Charles",
+                username: "bainesface",
                 body: 'this is a new comment'
               }
             return request(app)
@@ -190,15 +190,16 @@ expect(comments).toBeSortedBy('created_at',  {
             .expect(201)
             .then(({body})=>{
             const {comment} = body
-            expect(comment).toEqual({
+            expect(comment).toEqual(
+                expect.objectContaining({
                 body: 'this is a new comment',
-                votes: 16,
-                author: "Charles",
+                votes: 0,
+                author: "bainesface",
                 review_id: 2,
-                created_at: "14/12/2022"
-              },)
-          
+                created_at: expect.any(String),
+              })
+            )
             })
-    
+        
         });
     });
