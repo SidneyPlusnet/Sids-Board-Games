@@ -299,3 +299,25 @@ expect(comments).toBeSortedBy('created_at',  {
         });
 
 
+describe('GET /api/users', () => {
+    test.only('should  respond with an array of user objects', () => {
+        return request(app)
+        .get("api/users")
+        .expect(200)
+        .then(({rows})=>{
+const {users} = rows
+expect(users.length).toBe(4);
+            expect(users[0]).toBeInstanceOf(Object);
+            users.forEach((user) => {
+              expect(user).toEqual(
+                expect.objectContaining({
+                  username: expect.any(String),
+                  name: expect.any(String),
+                  avatar_url: expect.any(String)
+                })
+              );
+            });
+
+        })
+    });
+});
