@@ -8,10 +8,11 @@ response.status(200).send({categories})
 }).catch(next)
 }
 exports.getReviews = (request,response, next) =>{
-    console.log(request.query, "req.query in controller")
-    const {category, sort_by} = request.query
-    selectReviews(category, sort_by).then((reviews)=>{
+    const {category, sort_by, order_by} = request.query
+
+    selectReviews(category, sort_by, order_by).then((reviews)=>{
     response.status(200).send({reviews})
+    console.log(reviews, "reviews in controller")
     
     }).catch(next)
     

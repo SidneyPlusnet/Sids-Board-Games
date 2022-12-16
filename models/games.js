@@ -8,8 +8,11 @@ return rows
 })
 }
 
-exports.selectReviews = (sort_by = 'created_at', category) =>{
-const validSortBy = ['review_id', 'votes', 'created_at']
+exports.selectReviews = (category, sort_by = 'created_at', order_by = 'DESC') =>{
+    console.log(category, "category")
+    const validSortBy = ['review_id', 'votes', 'created_at']
+    const validCategories = [ 'euro game', 'social deduction', 'dexterity',"children's games" ]
+
 if(!validSortBy.includes(sort_by)){
     console.log("not valid sort by")
     return Promise.reject({status: 400, msg: 'Bad Request'})
@@ -18,6 +21,7 @@ if(!validSortBy.includes(sort_by)){
     const queryValues = []
 
     let queryString = `SELECT owner,title, reviews.review_id, category, review_img_url, reviews.created_at, reviews.votes, designer, count(comments.review_id) as comment_count from reviews left join comments on (reviews.review_id = comments.review_id)`
+
 if(category !== undefined){
 queryString += ` WHERE reviews.category = $1 `;
 queryValues.push(category)
@@ -26,11 +30,21 @@ console.log(queryString, "query string")
 
 
 
-queryString += `group by reviews.review_id ORDER BY ${sort_by} DESC;`;
+queryString += `group by reviews.review_id ORDER BY ${sort_by} ${order_by};`;
+
+
 
     return db
     .query(queryString, queryValues)
     .then(({rows})=>{
+
+        if(rows.length === 0 && !validCategories.includes(category)){
+            return Promise.reject({
+                status: 404,
+                msg: 'Not a category'
+    
+            })
+        }
         return rows
     })
 }

@@ -397,12 +397,12 @@ expect(comments).toBeSortedBy('created_at',  {
         describe('10. GET /api/reviews (queries)', () => {
             test('should select the reviews by the category value specified', () => {
                 return request(app)
-                .get("/api/reviews?category=social deduction")
+                .get("/api/reviews?category=dexterity")
                 .expect(200)
                 .then(({body: {reviews}})=>{
                     console.log(reviews, "reviews")
                     reviews.forEach((review)=>{
-                        expect(review.category).toBe('social deduction')
+                        expect(review.category).toBe('dexterity')
                     })
                 })
             });
@@ -428,7 +428,58 @@ expect(comments).toBeSortedBy('created_at',  {
         
                 })
             });
-            test('should ', () => {
+            test('should order by descending when requested', () => {
+                return request(app)
+                .get("/api/reviews?sort_by=votes&order_by=DESC")
+                .then(({body})=>{
+                    const { reviews } = body;
+        expect(reviews).toBeSortedBy('votes',  {
+            descending: true,
+          })
+        
+                })
+                
+            });
+            test('should order by ascending when requested', () => {
+                return request(app)
+                .get("/api/reviews?sort_by=votes&order_by=ASC")
+                .then(({body})=>{
+                    const { reviews } = body;
+        expect(reviews).toBeSortedBy('votes',  {
+            ascending: true,
+          })
+        
+                })
+            });
+            test('should return 400 for invalid sort by query', () => {
+                return request(app)
+                .get("/api/reviews?sort_by=bananas")
+                .expect(400)
+                .then((({body:{msg}})=>{
+                    expect(msg).toBe("Bad Request")
+                        }))
+            });
+            test('should return 400 for invalid order by query', () => {
+                return request(app)
+                .get("/api/reviews?sort_by=votes&order_by=thompson")
+                .expect(400)
+                .then((({body:{msg}})=>{
+                    expect(msg).toBe("Bad Request")
+                        }))
+            });
+            test('should return 404 for non-existent category', () => {
+                return request(app)
+                .get("/api/reviews?category=lampshade")
+                .expect(404)
+                .then((({body:{msg}})=>{
+                    expect(msg).toBe('Not a category')
+                        }))
+            });
+
+            test('should return 200 for valid category with no reviews', () => {
+                return request(app)
+                .get("/api/reviews?category=children's games")
+                .expect(200)
                 
             });
         });
