@@ -18,7 +18,7 @@ if(!validSortBy.includes(sort_by)){
 
     const queryValues = []
 
-    let queryString = `SELECT owner,title, reviews.review_id, category, review_img_url, reviews.created_at, reviews.votes, designer, count(comments.review_id) as comment_count from reviews left join comments on (reviews.review_id = comments.review_id)`
+    let queryString = `SELECT owner,title, reviews.review_id, category, review_img_url, reviews.created_at, reviews.votes, designer, count(comments.review_id) as comment_count FROM reviews left join comments on (reviews.review_id = comments.review_id)`
 
 if(category !== undefined){
 queryString += ` WHERE reviews.category = $1 `;
@@ -48,7 +48,7 @@ queryString += `group by reviews.review_id ORDER BY ${sort_by} ${order_by};`;
 
 exports.selectReviewId = (review_id) => {
 return db
-.query("SELECT * FROM reviews WHERE review_id = $1;", [review_id])
+.query("SELECT reviews.*, (SELECT COUNT(*) FROM comments WHERE comments.review_id = reviews.review_id) AS comment_count from reviews WHERE review_id = $1;", [review_id])
 .then(({rows}) => {   
     const review = rows[0] 
     if(!review){
@@ -58,6 +58,9 @@ return db
 
         })
     }
+
+        review.comment_count=   Number(review.comment_count)
+
    return review});
 }
 

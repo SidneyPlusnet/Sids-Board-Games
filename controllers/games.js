@@ -19,8 +19,19 @@ exports.getReviews = (request,response, next) =>{
     exports.getReviewId = (request, response, next) =>{
         const { review_id } = request.params;
 
+       const  anotherGetComments = (request, response, next) => {
+            const { review_id } = request.params;
+            selectReviewId(review_id).then(()=>{
+                selectCommentsByReviewId(review_id).then((comments)=>{
+               return  ({comments})
+            })
+            }).catch(next)
+        }
+        const numOfComments = anotherGetComments.length
+    
+console.log(numOfComments, "num of comments")
 
-        selectReviewId(review_id).then((review)=>{
+        selectReviewId(review_id, numOfComments).then((review)=>{
             response.status(200).send({review})
         }).catch(next)
     }
