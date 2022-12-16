@@ -53,8 +53,3 @@ console.log(review,"review in controller")
     
     }).catch(next)
 }
-
-// //.then((review)=>{
-//     console.log(review,"review in controller")
-//     response.status(200).send({review})
-//         })

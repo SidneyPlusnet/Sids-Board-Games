@@ -60,10 +60,6 @@ return comment[0]
 }
 
 exports.updateReview = (review, review_id) =>{
-
-    console.log(review, "review")
-    console.log(review_id, "review_id")
-
     if(review.inc_votes === undefined){
         console.log("review.inc_votes undefined")
         return Promise.reject({
@@ -75,8 +71,7 @@ exports.updateReview = (review, review_id) =>{
     return db.
     query(`UPDATE reviews SET votes = votes + $1 WHERE review_id = $2 RETURNING *;`, [review.inc_votes, review_id])
     .then(({rows: review})=>{
-        console.log("model")
-        console.log(review, "review in model")
+       
         return review[0]
     })
     
