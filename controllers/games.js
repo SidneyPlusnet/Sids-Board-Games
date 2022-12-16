@@ -1,6 +1,6 @@
 const { request, response } = require("../app")
 const reviews = require("../db/data/development-data/reviews")
-const {selectCategories, selectReviews, selectReviewId, selectCommentsByReviewId, insertComment, updateReview} = require("../models/games")
+const {selectCategories, selectReviews, selectReviewId, selectCommentsByReviewId, insertComment, updateReview, selectUsers} = require("../models/games")
 
 exports.getCategories = (request, response, next) => {
 selectCategories().then((categories)=>{
@@ -51,5 +51,14 @@ exports.patchReview = (request, response, next) =>{
 console.log(review,"review in controller")
     response.status(200).send({review})
     
+    }).catch(next)
+}
+
+
+exports.getUsers = (request, response, next) =>{
+    console.log("controller")
+
+    selectUsers().then((users)=>{
+        response.status(200).send({users})
     }).catch(next)
 }
