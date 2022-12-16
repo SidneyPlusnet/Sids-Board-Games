@@ -128,7 +128,7 @@ describe('GET /api/reviews/:review_id/comments', () => {
         .expect(200)
         .then(({body})=>{
             const {comments} = body
-      
+
             comments.forEach((comment)=>{
                 expect(comment).toEqual(
                     expect.objectContaining({
