@@ -9,12 +9,10 @@ return rows
 }
 
 exports.selectReviews = (category, sort_by = 'created_at', order_by = 'DESC') =>{
-    console.log(category, "category")
     const validSortBy = ['review_id', 'votes', 'created_at']
     const validCategories = [ 'euro game', 'social deduction', 'dexterity',"children's games" ]
 
 if(!validSortBy.includes(sort_by)){
-    console.log("not valid sort by")
     return Promise.reject({status: 400, msg: 'Bad Request'})
 }
 
@@ -25,7 +23,6 @@ if(!validSortBy.includes(sort_by)){
 if(category !== undefined){
 queryString += ` WHERE reviews.category = $1 `;
 queryValues.push(category)
-console.log(queryString, "query string")
 }
 
 
@@ -94,7 +91,6 @@ return comment[0]
 
 exports.updateReview = (review, review_id) =>{
     if(review.inc_votes === undefined){
-        console.log("review.inc_votes undefined")
         return Promise.reject({
             status: 400,
             msg: 'Bad Request'
@@ -112,7 +108,6 @@ exports.updateReview = (review, review_id) =>{
   
 
     exports.selectUsers =() =>{
-        console.log("models")
     return db
     .query(`SELECT * FROM users;`).then(({rows:users})=>{
     

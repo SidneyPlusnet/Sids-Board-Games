@@ -400,7 +400,6 @@ expect(comments).toBeSortedBy('created_at',  {
                 .get("/api/reviews?category=dexterity")
                 .expect(200)
                 .then(({body: {reviews}})=>{
-                    console.log(reviews, "reviews")
                     reviews.forEach((review)=>{
                         expect(review.category).toBe('dexterity')
                     })

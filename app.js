@@ -15,7 +15,6 @@ app.get("/api/users", getUsers)
 
 
 app.use((err, req, res, next) => {
-  console.log(err, "normal err")
   if (err.status && err.msg) {
     res.status(err.status).send({ msg: err.msg });
   }else 
@@ -43,7 +42,6 @@ res.status(404).send({msg: 'path not found'})
   })
 
   app.use((err, req, res, next) => {
-    console.log(err, " 500 error");
     res.status(500).send({ msg: 'Internal Server Error' });
   });
 
