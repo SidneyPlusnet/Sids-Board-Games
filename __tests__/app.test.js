@@ -393,3 +393,42 @@ expect(comments).toBeSortedBy('created_at',  {
                 })
             });
         });
+
+        describe('10. GET /api/reviews (queries)', () => {
+            test('should select the reviews by the category value specified', () => {
+                return request(app)
+                .get("/api/reviews?category=social deduction")
+                .expect(200)
+                .then(({body: {reviews}})=>{
+                    console.log(reviews, "reviews")
+                    reviews.forEach((review)=>{
+                        expect(review.category).toBe('social deduction')
+                    })
+                })
+            });
+            test('should sort articles by review_id', () => {
+                return request(app)
+                .get("/api/reviews?sort_by=review_id")
+                .then(({body})=>{
+                    const { reviews } = body;
+        expect(reviews).toBeSortedBy('review_id',  {
+            descending: true,
+          })
+        
+                })
+            });
+            test('should sort articles by votes', () => {
+                return request(app)
+                .get("/api/reviews?sort_by=votes")
+                .then(({body})=>{
+                    const { reviews } = body;
+        expect(reviews).toBeSortedBy('votes',  {
+            descending: true,
+          })
+        
+                })
+            });
+            test('should ', () => {
+                
+            });
+        });

@@ -8,9 +8,28 @@ return rows
 })
 }
 
-exports.selectReviews = () =>{
+exports.selectReviews = (sort_by = 'created_at', category) =>{
+const validSortBy = ['review_id', 'votes', 'created_at']
+if(!validSortBy.includes(sort_by)){
+    console.log("not valid sort by")
+    return Promise.reject({status: 400, msg: 'Bad Request'})
+}
+
+    const queryValues = []
+
+    let queryString = `SELECT owner,title, reviews.review_id, category, review_img_url, reviews.created_at, reviews.votes, designer, count(comments.review_id) as comment_count from reviews left join comments on (reviews.review_id = comments.review_id)`
+if(category !== undefined){
+queryString += ` WHERE reviews.category = $1 `;
+queryValues.push(category)
+console.log(queryString, "query string")
+}
+
+
+
+queryString += `group by reviews.review_id ORDER BY ${sort_by} DESC;`;
+
     return db
-    .query("SELECT owner,title, reviews.review_id, category, review_img_url, reviews.created_at, reviews.votes, designer, count(comments.review_id) as comment_count from reviews left join comments on (reviews.review_id = comments.review_id)group by reviews.review_id  ORDER BY created_at DESC;")
+    .query(queryString, queryValues)
     .then(({rows})=>{
         return rows
     })
@@ -88,3 +107,4 @@ exports.updateReview = (review, review_id) =>{
     })
     
     }
+
