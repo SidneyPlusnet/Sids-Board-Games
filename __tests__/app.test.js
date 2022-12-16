@@ -305,7 +305,7 @@ describe('GET /api/users', () => {
         .get("/api/users")
         .expect(200)
         .then(({body})=>{
-            console.log(body, "body")
+    
 const {users} = body
 expect(users.length).toBe(4);
             expect(users[0]).toBeInstanceOf(Object);
