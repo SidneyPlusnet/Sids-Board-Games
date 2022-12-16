@@ -8,7 +8,9 @@ response.status(200).send({categories})
 }).catch(next)
 }
 exports.getReviews = (request,response, next) =>{
-    selectReviews().then((reviews)=>{
+    const {category, sort_by, order_by} = request.query
+
+    selectReviews(category, sort_by, order_by).then((reviews)=>{
     response.status(200).send({reviews})
     
     }).catch(next)
@@ -41,14 +43,12 @@ response.status(201).send({comment})
 }
 
 exports.patchReview = (request, response, next) =>{
-    console.log("controller")
     const { review_id } = request.params;
     const review = request.body
 
     selectReviewId(review_id).then(()=>{
     return updateReview(review, review_id)
     }).then((review)=>{
-console.log(review,"review in controller")
     response.status(200).send({review})
     
     }).catch(next)
@@ -56,7 +56,6 @@ console.log(review,"review in controller")
 
 
 exports.getUsers = (request, response, next) =>{
-    console.log("controller")
 
     selectUsers().then((users)=>{
         response.status(200).send({users})

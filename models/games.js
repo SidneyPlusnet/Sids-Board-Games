@@ -8,10 +8,40 @@ return rows
 })
 }
 
-exports.selectReviews = () =>{
+exports.selectReviews = (category, sort_by = 'created_at', order_by = 'DESC') =>{
+    const validSortBy = ['review_id', 'votes', 'created_at']
+    const validCategories = [ 'euro game', 'social deduction', 'dexterity',"children's games" ]
+
+if(!validSortBy.includes(sort_by)){
+    return Promise.reject({status: 400, msg: 'Bad Request'})
+}
+
+    const queryValues = []
+
+    let queryString = `SELECT owner,title, reviews.review_id, category, review_img_url, reviews.created_at, reviews.votes, designer, count(comments.review_id) as comment_count from reviews left join comments on (reviews.review_id = comments.review_id)`
+
+if(category !== undefined){
+queryString += ` WHERE reviews.category = $1 `;
+queryValues.push(category)
+}
+
+
+
+queryString += `group by reviews.review_id ORDER BY ${sort_by} ${order_by};`;
+
+
+
     return db
-    .query("SELECT owner,title, reviews.review_id, category, review_img_url, reviews.created_at, reviews.votes, designer, count(comments.review_id) as comment_count from reviews left join comments on (reviews.review_id = comments.review_id)group by reviews.review_id  ORDER BY created_at DESC;")
+    .query(queryString, queryValues)
     .then(({rows})=>{
+
+        if(rows.length === 0 && !validCategories.includes(category)){
+            return Promise.reject({
+                status: 404,
+                msg: 'Not a category'
+    
+            })
+        }
         return rows
     })
 }
@@ -61,7 +91,6 @@ return comment[0]
 
 exports.updateReview = (review, review_id) =>{
     if(review.inc_votes === undefined){
-        console.log("review.inc_votes undefined")
         return Promise.reject({
             status: 400,
             msg: 'Bad Request'
@@ -79,7 +108,6 @@ exports.updateReview = (review, review_id) =>{
   
 
     exports.selectUsers =() =>{
-        console.log("models")
     return db
     .query(`SELECT * FROM users;`).then(({rows:users})=>{
     
@@ -88,3 +116,4 @@ exports.updateReview = (review, review_id) =>{
     })
     
     }
+
